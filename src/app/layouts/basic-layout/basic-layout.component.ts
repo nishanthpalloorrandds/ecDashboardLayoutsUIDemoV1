@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation, Inject, ViewChild } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { DashboardLayoutAllModule, DashboardLayoutComponent, PanelModel,DashboardLayoutModule } from '@syncfusion/ej2-angular-layouts';
@@ -7,7 +8,7 @@ import { DashboardLayoutAllModule, DashboardLayoutComponent, PanelModel,Dashboar
   styleUrls: ['./basic-layout.component.css'],
   encapsulation: ViewEncapsulation.None,
   standalone: true,
-  imports: [DashboardLayoutAllModule,BrowserModule,DashboardLayoutModule]
+  imports: [DashboardLayoutAllModule,DashboardLayoutModule,CommonModule]
 })
 export class BasicLayoutComponent implements OnInit {
 
@@ -19,7 +20,7 @@ export class BasicLayoutComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public count: number = 8;
+  public count: number = 4;
     public cellSpacing: number[] = [10, 10];
     addPanel(): void {
         let panel: PanelModel[] = [{
