@@ -1,1 +1,42 @@
-<p>crud-layout works!</p>
+<div class="control-section">
+    <div>
+            <div class="add-widget-button e-control e-btn e-lib" id="dialogBtn" (click)="LoadDashboard()">
+                <b>First Load from DB</b>
+            </div>
+                
+        <div id="dialogcontent1">
+            <div>
+                <h4>Add New Widget</h4>
+                       
+                <div id="Widget1" class="add-widget-button e-control e-btn e-lib" (click)="addWidget('W5')">
+                    <p>W5 </p>
+                </div>
+                <div id="Widget2" class="add-widget-button e-control e-btn e-lib" (click)="addWidget('W6')">
+                    <p >W6</p>
+                </div>
+                <div id="Widget3" class="add-widget-button e-control e-btn e-lib" (click)="addWidget('W7')">
+                    <p >W7</p>
+                </div>
+                 <div class="inline" id="properties">
+                    <button ejs-button id='saveBtn' #saveBtn cssClass="e-primary" (click)='onSaveClick($event)'>Save</button> &nbsp;
+                    <button ejs-button id='restoreBtn' #restoreBtn cssClass="e-flat e-outline" (click)='onrestoreClick($event)'>Reload</button>
+            </div>
+            </div>
+        </div>
+
+            <!-- </div> -->
+    </div>
+    <ejs-dashboardlayout id='default_dashboard' #default_dashboard 
+        [columns]='4' 
+        [cellSpacing]='cellSpacing' 
+        [cellAspectRatio]="cellAspectRatio"
+        [allowResizing]="true"
+        [panels]="panels"
+        >
+    </ejs-dashboardlayout>
+
+   
+
+    <textarea id="eventLog" rows="10" cols="100" [value]="restoreModelStr"></textarea>
+
+</div>

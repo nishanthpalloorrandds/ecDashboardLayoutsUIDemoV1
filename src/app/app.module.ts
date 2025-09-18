@@ -9,14 +9,14 @@ import { CrudLayoutComponent } from './layouts/crud-layout/crud-layout.component
 
 @NgModule({
   declarations: [
-    AppComponent,
-    CrudLayoutComponent
+    AppComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     DashboardLayoutModule,
-    BasicLayoutComponent
+    BasicLayoutComponent,
+    CrudLayoutComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

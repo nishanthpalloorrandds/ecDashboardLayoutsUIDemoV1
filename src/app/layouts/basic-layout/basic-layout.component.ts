@@ -20,7 +20,7 @@ export class BasicLayoutComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public count: number = 4;
+  public count: number = 5;
     public cellSpacing: number[] = [10, 10];
     addPanel(): void {
         let panel: PanelModel[] = [{
@@ -28,6 +28,7 @@ export class BasicLayoutComponent implements OnInit {
             content: '<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">' + this.count.toString() + '</div>'
         }];
         this.dashboard.addPanel(panel[0]);
+        
         const panelElement = document.getElementById(this.count.toString());
         if (panelElement) {
             const closeIcon: any = panelElement.querySelector('.e-close-icon');
