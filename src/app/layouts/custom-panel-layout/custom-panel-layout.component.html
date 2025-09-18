@@ -1,0 +1,42 @@
+<div class="control-section">
+    <div>
+            <!-- <div class="add-widget-button e-control e-btn e-lib" id="dialogBtn" (click)="FirstLoadDashboardFromAPI()">
+                <b>First Load from API</b>
+            </div> -->
+                
+
+        <div id="dialogcontent1">
+            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                <h4 style="margin: 0 16px 0 0;">Widget Gallery - Add from here:</h4>
+                <div id="widgetsGallery" style="display: flex; gap: 12px;">
+                  <div *ngFor="let panel of panelsGallery" 
+                       class="add-widget-button e-control e-btn e-lib" 
+                       [id]="'Widget' + panel.id" 
+                       (click)="addWidget(panel.id)">
+                    <p>{{ panel.id }}</p>
+                  </div>
+                </div>
+            </div>
+            <div class="inline" id="properties" style="margin-top: 12px;">
+                <button ejs-button id='saveBtn' #saveBtn cssClass="e-primary" (click)='onSaveClick($event)'>Save My Dashboard (To DB)</button> &nbsp;
+                <button ejs-button id='restoreBtn' #restoreBtn cssClass="e-flat e-outline" (click)='onReloadFromAPIClick($event)'>Reload from My Dashboard (From DB)</button>
+                <span> {{Message}}</span>
+            </div>
+        </div>
+
+            <!-- </div> -->
+    </div>
+    <ejs-dashboardlayout id='default_dashboard' #default_dashboard 
+        [columns]='4' 
+        [cellSpacing]='cellSpacing' 
+        [cellAspectRatio]="cellAspectRatio"
+        [allowResizing]="true"
+        [panels]="panels"
+        >
+    </ejs-dashboardlayout>
+
+   
+
+    <textarea id="eventLog" rows="10" cols="100" [value]="restoreModelStr"></textarea>
+
+</div>
