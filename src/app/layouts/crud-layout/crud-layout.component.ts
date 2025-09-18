@@ -36,26 +36,31 @@ export class CrudLayoutComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    //Works, but with a timeout
+    // setTimeout(() => {
+    // this.LoadDashboard();
+    // },500);
+  }
 
   public cellSpacing: number[] = [10, 10];
-  public cellAspectRatio: number = 100 / 50;
+  public cellAspectRatio: number = 100 / 90;
   public panels: PanelModel[] = [
     {
-      id: 'w0',
+      id: 'welcome',
       sizeX: 1,
       sizeY: 1,
       row: 0,
       col: 0,
       content:
-        '<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">Welcome-0</div>',
+        '<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">Welcome</div>',
     },
   ];
 
   LoadDashboard(): void {
     let panelsFromDB = [
       {
-        id: 'w1',
+        id: 'W1',
         sizeX: 1,
         sizeY: 1,
         row: 0,
@@ -64,7 +69,7 @@ export class CrudLayoutComponent implements OnInit {
           '<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">W1</div>',
       },
       {
-        id: 'w2',
+        id: 'W2',
         sizeX: 1,
         sizeY: 1,
         row: 0,
@@ -73,7 +78,7 @@ export class CrudLayoutComponent implements OnInit {
           '<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">W2</div>',
         },
       {
-        id: 'w3',
+        id: 'W3',
         sizeX: 1,
         sizeY: 1,
         row: 0,
@@ -82,7 +87,7 @@ export class CrudLayoutComponent implements OnInit {
           '<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">W3</div>',
       },
       {
-        id: 'w4',
+        id: 'W4',
         sizeX: 1,
         sizeY: 1,
         row: 1,
@@ -101,18 +106,16 @@ export class CrudLayoutComponent implements OnInit {
     this.dashboard.removeAll();
 
     this.dashboard!.panels = this.panels;
-    // Add new ones
-    // this.panels.forEach((panel: any) => {
-    //   // this.dashboard.addPanel(panel);
-    //   // this.addCloseEvent(panel.id);
-    // });
-
+   
     //Add close events for all (Or find with class and attach events)
     setTimeout(() => {
       this.panels.forEach((panel: any) => {
         this.addCloseEvent(panel.id);
       });
     }, 500);
+
+    
+    
   }
 
   addWidget(panelId: string): void {
@@ -132,6 +135,19 @@ export class CrudLayoutComponent implements OnInit {
 
     this.addCloseEvent(panelId);
   }
+
+  setCloseEventToAll(): void {
+    setTimeout(() => {
+      const closeIcons: any = document.querySelector('.e-close-icon');
+      if (closeIcons.length > 0) {
+        closeIcons.forEach((closeIcon: any) => {
+          closeIcon.removeEventListener('click');
+          closeIcon.addEventListener('click', this.onCloseIconHandler.bind(this));
+        });
+      }
+    }, 500);      
+  }
+
 
   addCloseEvent(panelId: string): void {
     const panelElement = document.getElementById(panelId);
