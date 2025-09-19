@@ -20,6 +20,7 @@
     "@angular/router": "^14.1.0",
     "@syncfusion/ej2-angular-base": "^23.1.38",
     "@syncfusion/ej2-angular-buttons": "^31.1.17",
+    "@syncfusion/ej2-angular-charts": "^31.1.20",
     "@syncfusion/ej2-angular-layouts": "^23.1.38",
     "@syncfusion/ej2-angular-popups": "^31.1.20",
     "@syncfusion/ej2-base": "^23.1.38",

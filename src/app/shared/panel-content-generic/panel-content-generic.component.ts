@@ -1,14 +1,20 @@
 import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ChartModule, LineSeriesService, CategoryService, LegendService, TooltipService } from '@syncfusion/ej2-angular-charts';
 
 @Component({
   selector: 'app-panel-content-generic',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ChartModule],
+  providers: [LineSeriesService, CategoryService, LegendService, TooltipService],
   templateUrl: './panel-content-generic.component.html',
   styleUrls: ['./panel-content-generic.component.css']
 })
 export class PanelContentGenericComponent {
+  public salesChartData: any[] = [];
+  public salesChartPrimaryXAxis: any = { valueType: 'Category', title: 'Month' };
+  public salesChartPrimaryYAxis: any = { title: 'Sales', labelFormat: '{value}' };
+  public salesChartTitle: string = 'Sales Performance';
   @Input() panelId!: string;
   public customText: string = '';
   public panelData: any[] = [];
@@ -27,6 +33,13 @@ export class PanelContentGenericComponent {
     const match = this.panelsFromSeeded.find((p: any) => p.id === this.panelId);
     this.customText = match ? match.customText : '';
     this.fetchPanelData(this.panelId);
+    if (this.panelId === 'SalesPerformance') {
+      this.salesChartData = [
+        { month: 'July', sales: 10000, target: 12000 },
+        { month: 'August', sales: 15000, target: 14000 },
+        { month: 'September', sales: 13000, target: 15000 }
+      ];
+    }
   }
 
   fetchPanelData(panelId: string) {
@@ -42,9 +55,9 @@ export class PanelContentGenericComponent {
     switch(panelId) {
       case 'MyRecentTasks':
         return [
-          { task: 'Call client', due: '2025-09-20', status: 'Pending' },
-          { task: 'Send invoice', due: '2025-09-21', status: 'Done' },
-          { task: 'Prepare report', due: '2025-09-22', status: 'In Progress' }
+          { task: 'Call client', due: '20-09-2025', status: 'Pending' },
+          { task: 'Send invoice', due: '21-09-2025', status: 'Done' },
+          { task: 'Prepare report', due: '22-09-2025', status: 'In Progress' }
         ];
       case 'MyRecentLeads':
         return [

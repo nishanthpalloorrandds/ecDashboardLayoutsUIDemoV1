@@ -8,7 +8,15 @@
 	</div>
 
 	<ng-container *ngIf="!loading">
-		<table *ngIf="panelData.length > 0" class="panel-table" style="margin-top: 10px; width: 100%; border-collapse: collapse;">
+		<!-- Show chart for SalesPerformance panel -->
+		<ejs-chart *ngIf="panelId === 'SalesPerformance'" [primaryXAxis]="salesChartPrimaryXAxis" [primaryYAxis]="salesChartPrimaryYAxis" [title]="salesChartTitle" style="display:block; height:300px;">
+			<e-series-collection>
+				<e-series [dataSource]="salesChartData" type='Line' xName='month' yName='sales' name='Sales'></e-series>
+				<e-series [dataSource]="salesChartData" type='Line' xName='month' yName='target' name='Target'></e-series>
+			</e-series-collection>
+		</ejs-chart>
+		<!-- Show table for all other panels -->
+		<table *ngIf="panelData.length > 0 && panelId !== 'SalesPerformance'" class="panel-table" style="margin-top: 10px; width: 100%; border-collapse: collapse;">
 			<thead>
 				<tr>
 					<th *ngFor="let key of panelData[0] | keyvalue" style="border: 1px solid #ccc; padding: 4px; text-align: left;">{{ key.key }}</th>
@@ -20,6 +28,6 @@
 				</tr>
 			</tbody>
 		</table>
-		<div *ngIf="panelData.length === 0" style="margin-top: 10px; color: #888;">No data available for this panel.</div>
+		<div *ngIf="panelData.length === 0 && panelId !== 'SalesPerformance'" style="margin-top: 10px; color: #888;">No data available for this panel.</div>
 	</ng-container>
 </div>
