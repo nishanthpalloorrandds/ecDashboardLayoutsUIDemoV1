@@ -7,7 +7,7 @@
 
         <div id="dialogcontent1">
             <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                <h4 style="margin: 0 16px 0 0;">Widget Gallery - Add from here:</h4>
+                <h4 style="margin: 0 16px 0 0;">Widget Gallery (Sales Dashboard)- Add from here:</h4>
                 <div id="widgetsGallery" style="display: flex; gap: 12px;">
                   <div *ngFor="let panel of panelsGallery" 
                        class="add-widget-button e-control e-btn e-lib" 
@@ -27,7 +27,7 @@
             <!-- </div> -->
     </div>
     <ejs-dashboardlayout id='default_dashboard' #default_dashboard 
-        [columns]='4' 
+        [columns]='3' 
         [cellSpacing]='cellSpacing' 
         [cellAspectRatio]="cellAspectRatio"
         [allowResizing]="true"

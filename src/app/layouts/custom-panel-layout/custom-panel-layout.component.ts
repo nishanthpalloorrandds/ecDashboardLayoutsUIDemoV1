@@ -6,6 +6,10 @@ import {
   ViewEncapsulation,
   Inject,
   ViewChild,
+  ViewContainerRef,
+  ComponentRef,
+  AfterViewInit,
+  Type
 } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import {
@@ -16,6 +20,7 @@ import {
 } from '@syncfusion/ej2-angular-layouts';
 import { DialogComponent, DialogModule } from '@syncfusion/ej2-angular-popups';
 import { ButtonComponent, ButtonModule } from '@syncfusion/ej2-angular-buttons';
+import { PanelContentGenericComponent } from '../../shared/panel-content-generic/panel-content-generic.component';
 
 @Component({
   selector: 'app-custom-panel-layout',
@@ -31,9 +36,18 @@ import { ButtonComponent, ButtonModule } from '@syncfusion/ej2-angular-buttons';
     ButtonModule,
   ],
 })
-export class CustomPanelLayoutComponent implements OnInit {
+export class CustomPanelLayoutComponent implements OnInit, AfterViewInit {
+  ngAfterViewInit(): void {
+    // Render panels after the view is initialized
+//     setTimeout(() => {
+//   this.FirstLoadDashboardFromAPI ();
+// }, 200);
+  }
   @ViewChild('dialog') public dialogObj!: DialogComponent | any;
+  @ViewChild('default_dashboard', { static: true, read: ViewContainerRef })
+  public dashboardContainer!: ViewContainerRef;
   @ViewChild('default_dashboard') public dashboard!: DashboardLayoutComponent;
+  private panelComponentRefs: { [key: string]: ComponentRef<PanelContentGenericComponent> } = {};
 
   
   constructor() {}
@@ -41,7 +55,7 @@ export class CustomPanelLayoutComponent implements OnInit {
   ngOnInit(): void {
 setTimeout(() => {
   this.FirstLoadDashboardFromAPI ();
-}, 200);
+}, 100);
 
   }
 
@@ -53,12 +67,12 @@ setTimeout(() => {
   public restoreModelStr: any = [];
 
   public panelsFromSeeded: any = [
-    {id:'W1',sizeX:1,sizeY:1,row:0,col:0,content:'<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">W1</div>'},
-          {id:'W2',sizeX:1,sizeY:1,row:0,col:1,content:'<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">W2</div>'},
-          {id:'W3',sizeX:1,sizeY:1,row:0,col:2,content:'<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">W3</div>'},
-          {id:'W4',sizeX:1,sizeY:1,row:1,col:0,content:'<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">W4</div>'},
-          {id:'W5',sizeX:1,sizeY:1,row:1,col:1,content:'<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">W5</div>'},
-          {id:'W6',sizeX:1,sizeY:1,row:1,col:2,content:'<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">W6</div>'}
+    {id:'MyRecentTasks',sizeX:1,sizeY:1,row:0,col:0, customText:"My Recent Tasks"},
+    {id:'MyRecentLeads',sizeX:1,sizeY:1,row:0,col:1, customText:"My Leads"},
+    {id:'OrderSummary',sizeX:1,sizeY:1,row:0,col:2, customText:"Order Symmary"},
+    {id:'LeadSummary',sizeX:1,sizeY:1,row:1,col:0, customText:"Lead Summary"},
+    {id:'SalesPerformance',sizeX:1,sizeY:1,row:1,col:1, customText:"Sales Performance"},
+    {id:'SalesAvg',sizeX:1,sizeY:1,row:1,col:2, customText:"Sales Average"}
   ]
   public panelsOfThisUserFromAPI: any = [
         ];
@@ -74,36 +88,94 @@ public Message: string = "Ready";
   }
 
   renderPanels(): void {
-    // Clear old panels
+    // Remove all existing panel component refs
+    Object.values(this.panelComponentRefs).forEach(ref => ref.destroy());
+    this.panelComponentRefs = {};
+    // Remove all panels from dashboard
     this.dashboard.removeAll();
+    // Add panels and dynamically create Angular components as content
+    this.panels.forEach((panel: any) => {
+      const panelConfig = {
+        id: panel.id,
+        sizeX: panel.sizeX,
+        sizeY: panel.sizeY,
+        row: panel.row,
+        col: panel.col,
+        content: '' // Will be replaced by Angular component
+      };
+      this.dashboard.addPanel(panelConfig);
+      // Dynamically create the Angular component inside the panel
+      setTimeout(() => {
+        const panelElement = document.getElementById(panel.id);
+        if (panelElement) {
+          // Clear existing content
+          //panelElement.innerHTML = '';
 
-    this.dashboard!.panels = this.panels;
-   
-    //Add close events for all (Or find with class and attach events)
-    setTimeout(() => {
-      this.panels.forEach((panel: any) => {
-        this.addCloseEvent(panel.id);
-      });
-    }, 500);
+          let children = Array.from(panelElement.children);
+          panelElement.innerHTML = '';
+
+          // children.forEach(child => panelElement.removeChild(child));
+
+          // Add close icon
+          const closeIcon = document.createElement('span');
+          closeIcon.className = 'e-template-icon e-close-icon';
+          closeIcon.addEventListener('click', this.onCloseIconHandler.bind(this));
+          panelElement.appendChild(closeIcon);
+
+
+          // Create the Angular component
+          const ref = this.dashboardContainer.createComponent(PanelContentGenericComponent);
+          ref.instance.panelId = panel.id;
+          panelElement.appendChild(ref.location.nativeElement);
+          this.panelComponentRefs[panel.id] = ref;
+
+          children.forEach(child => {
+            if(child.hasAttribute('class') && child.getAttribute('class') === 'e-panel-container'){
+              panelElement.appendChild(child);
+            }
+          });
+          
+        }
+      }, 100);
+    });
+
+    // Dynamically create the Angular component inside the panel
+      // setTimeout(() => {
+      //   this.panels.forEach((panel: any) => {
+      //   const panelElement = document.getElementById(panel.id);
+      //   if (panelElement) {
+      //     // Clear existing content
+      //     panelElement.innerHTML = '';
+
+      //     // Add close icon
+      //     const closeIcon = document.createElement('span');
+      //     closeIcon.className = 'e-template-icon e-close-icon';
+      //     closeIcon.addEventListener('click', this.onCloseIconHandler.bind(this));
+      //     panelElement.appendChild(closeIcon);
+
+
+      //     // Create the Angular component
+      //     const ref = this.dashboardContainer.createComponent(PanelContentGenericComponent);
+      //     ref.instance.panelId = panel.id;
+      //     panelElement.appendChild(ref.location.nativeElement);
+      //     this.panelComponentRefs[panel.id] = ref;
+          
+      //   }
+      // });
+      // }, 400);
   }
 
   addWidget(panelId: string): void {
+    debugger;
     let panel: PanelModel = {
       id: panelId,
       sizeX: 1,
       sizeY: 1,
       row: 0,
-      col: 0,
-      content:
-        '<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">' +
-        panelId +
-        '</div>',
+      col: 0
     };
-
-    this.dashboard.addPanel(panel);
-
-    this.addCloseEvent(panelId);
-
+    this.panels.push(panel);
+    this.renderPanels();
     // Remove from gallery
     this.panelsGallery = this.panelsGallery.filter((p: any) => p.id !== panelId);
   }
@@ -132,16 +204,18 @@ public Message: string = "Ready";
     console.log(this.panelsOfThisUserFromAPI);
 
      // Modifying content for restore testing
-    this.panelsOfThisUserFromAPI.forEach((panel: any, index: number) => {
-      panel.content = '<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">' +
-                  panel.id +
-                  '</div>';
-    });
+    // this.panelsOfThisUserFromAPI.forEach((panel: any, index: number) => {
+    //   panel.content = '<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">' +
+    //               panel.id +
+    //               '</div>';
+    // });
     this.Message = "Saved at " + new Date().toLocaleTimeString();
   }
 
   onReloadFromAPIClick(args: any) {
-    this.dashboard!.panels = this.panelsOfThisUserFromAPI;
+    //this.dashboard!.panels = this.panelsOfThisUserFromAPI;
+    this.panels = this.panelsOfThisUserFromAPI;
+    this.renderPanels();
 
     // Reset panelsGallery to those in panelsFromSeeded not present in panelsFromAPI
     const apiIds = new Set((this.panelsOfThisUserFromAPI || []).map((p: any) => p.id));
@@ -180,19 +254,14 @@ public Message: string = "Ready";
     if(this.panelsGallery.find((p: any) => p.id === panelId)){
       return;
     }
-
-    let panel: PanelModel = {
+    let panel: any = {
       id: panelId,
       sizeX: 1,
       sizeY: 1,
       row: 0,
-      col: 0,
-      content:
-        '<span id="close" class="e-template-icon e-close-icon"></span><div class="text-align">' +
-        panelId +
-        '</div>',
+      col: 0
+      //customText: this.panelsFromSeeded.find((p: any) => p.id === panelId)?.customText || ''
     };
-debugger;
     this.panelsGallery.push(panel);
   }
 }

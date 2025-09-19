@@ -1,0 +1,25 @@
+
+<div class="panel-generic-content">
+	<div>Panel ID: {{ panelId }}</div>
+
+	<div *ngIf="loading" style="text-align:center; margin: 20px 0;">
+		<img [src]="loaderImg" alt="Loading..." width="40" height="40" />
+		<div style="color:#888; font-size:14px;">Loading data...</div>
+	</div>
+
+	<ng-container *ngIf="!loading">
+		<table *ngIf="panelData.length > 0" class="panel-table" style="margin-top: 10px; width: 100%; border-collapse: collapse;">
+			<thead>
+				<tr>
+					<th *ngFor="let key of panelData[0] | keyvalue" style="border: 1px solid #ccc; padding: 4px; text-align: left;">{{ key.key }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr *ngFor="let row of panelData">
+					<td *ngFor="let key of row | keyvalue" style="border: 1px solid #ccc; padding: 4px;">{{ key.value }}</td>
+				</tr>
+			</tbody>
+		</table>
+		<div *ngIf="panelData.length === 0" style="margin-top: 10px; color: #888;">No data available for this panel.</div>
+	</ng-container>
+</div>
