@@ -37,6 +37,7 @@ export class PanelContentGenericComponent {
     }, 500); // Simulate API delay
   }
 
+  //This will call a middle layer api instead. From there it will call respective specific apis and retun results
   getPanelData(panelId: string): any[] {
     switch(panelId) {
       case 'MyRecentTasks':
